@@ -295,6 +295,7 @@ func fetchShowVariablesBackwardCompatibile(stat map[string]float64) error {
 	return nil
 }
 
+// This code does not work with multi-source replication.
 func (m *MySQLPlugin) fetchShowSlaveStatus(db *sql.DB, stat map[string]float64) error {
 	rows, err := db.Query("show slave status")
 	if err != nil {
@@ -302,20 +303,31 @@ func (m *MySQLPlugin) fetchShowSlaveStatus(db *sql.DB, stat map[string]float64) 
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var (
-			variableName string
-			value        *string
-		)
-		if err := rows.Scan(&variableName, &value); err != nil {
+		columns, err := rows.ColumnTypes()
+		if err != nil {
 			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
 		}
-		if variableName == "Seconds_Behind_Master" {
-			if value != nil {
-				f, err := atof(*value)
-				if err != nil {
-					return err
+
+		valuePtrs := make([]interface{}, len(columns))
+		values := make([]sql.RawBytes, len(columns))
+		for i := range values {
+			values[i] = sql.RawBytes{}
+			valuePtrs[i] = &values[i]
+		}
+		if err = rows.Scan(valuePtrs...); err != nil {
+			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+		}
+		for i, column := range columns {
+			variableName := column.Name()
+			value := values[i]
+			if variableName == "Seconds_Behind_Master" {
+				if value != nil {
+					f, err := atof(string(value))
+					if err != nil {
+						return err
+					}
+					stat["Seconds_Behind_Master"] = f
 				}
-				stat["Seconds_Behind_Master"] = f
 			}
 		}
 	}
