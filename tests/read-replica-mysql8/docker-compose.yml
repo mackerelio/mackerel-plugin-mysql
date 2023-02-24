@@ -10,7 +10,7 @@ services:
       MYSQL_USER: test
       MYSQL_PASSWORD: passpass
     volumes:
-      - ./sourcedb/init.d:/docker-entrypoint-init.d
+      - ./sourcedb/init.d:/docker-entrypoint-initdb.d
       - ./sourcedb/conf.d:/etc/mysql/conf.d
   replicadb:
     hostname: replicadb
@@ -20,7 +20,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: passpass
     volumes:
-      - ./replicadb/init.d:/docker-entrypoint-init.d
+      - ./replicadb/init.d:/docker-entrypoint-initdb.d
       - ./replicadb/conf.d:/etc/mysql/conf.d
     depends_on:
       - sourcedb
