@@ -1,0 +1,26 @@
+version: '3'
+services:
+  sourcedb:
+    hostname: sourcedb
+    image: mysql:8
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: passpass
+      MYSQL_USER: test
+      MYSQL_PASSWORD: passpass
+    volumes:
+      - ./sourcedb/init.d:/docker-entrypoint-initdb.d
+      - ./sourcedb/conf.d:/etc/mysql/conf.d
+  replicadb:
+    hostname: replicadb
+    image: mysql:8
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: passpass
+    volumes:
+      - ./replicadb/init.d:/docker-entrypoint-initdb.d
+      - ./replicadb/conf.d:/etc/mysql/conf.d
+    depends_on:
+      - sourcedb
