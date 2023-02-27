@@ -1,7 +1,5 @@
 #!/bin/sh
 
-go install github.com/lufia/graphitemetrictest/cmd/graphite-metric-test@latest || exit
-
 prog=$(basename "$0")
 if ! [ -S /var/run/docker.sock ]
 then
@@ -11,7 +9,7 @@ fi
 
 cd "$(dirname "$0")" || exit
 PATH=$(pwd):$PATH
-plugin=$(basename "$(pwd)")
+plugin=mackerel-plugin-mysql
 if ! which "$plugin" >/dev/null
 then
 	echo "$prog: $plugin is not installed" >&2
