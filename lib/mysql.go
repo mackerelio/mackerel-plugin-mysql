@@ -277,7 +277,7 @@ func (m *MySQLPlugin) fetchShowVariables(db *sql.DB, stat map[string]float64) er
 		}
 		if _, found := stat["key_cache_block_size"]; found {
 			if _, found = stat["Key_blocks_unused"]; found {
-				stat["key_buf_bytes_used"] = stat["key_buffer_size"] - stat["Key_blocks_unused"]*stat["key_cache_block_size"]
+				stat["key_buf_bytes_used"] = stat["key_buffer_size"] - stat["Key_blocks_unused"] * stat["key_cache_block_size"]
 			}
 			if _, found = stat["Key_blocks_not_flushed"]; found {
 				stat["key_buf_bytes_unflushed"] = stat["Key_blocks_not_flushed"] * stat["key_cache_block_size"]
