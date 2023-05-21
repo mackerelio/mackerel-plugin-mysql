@@ -67,7 +67,6 @@ mysql.threads.Threads_cached	>=0
 mysql.innodb_buffer_pool_efficiency.Innodb_buffer_pool_reads	>=0
 mysql.innodb_buffer_pool_efficiency.Innodb_buffer_pool_read_requests	>=0
 mysql.innodb_adaptive_hash_index.hash_index_cells_total	>=0
-mysql.innodb_adaptive_hash_index.hash_index_cells_used	>=0
 mysql.innodb_transactions_active_locked.current_transactions	>=0
 mysql.innodb_transactions_active_locked.read_views	>=0
 mysql.innodb_buffer_pool_activity.pages_created	>=0

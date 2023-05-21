@@ -255,7 +255,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["ibuf_merges"], 0)
 	assert.EqualValues(t, stat["ibuf_merged"], 0)
 	assert.EqualValues(t, stat["hash_index_cells_total"], 276671)
-	assert.EqualValues(t, stat["hash_index_cells_used"], 0)
 	// Log
 	assert.EqualValues(t, stat["log_writes"], 12)
 	assert.EqualValues(t, stat["pending_log_writes"], 0)
@@ -435,7 +434,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["ibuf_merges"], 348)
 	assert.EqualValues(t, stat["ibuf_merged"], 396)
 	assert.EqualValues(t, stat["hash_index_cells_total"], 2699)
-	assert.EqualValues(t, stat["hash_index_cells_used"], 0)
 	// Log
 	assert.EqualValues(t, stat["log_writes"], 7498)
 	assert.EqualValues(t, stat["pending_log_writes"], 0)
@@ -626,7 +624,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["ibuf_merges"], 0)
 	assert.EqualValues(t, stat["ibuf_merged"], 0)
 	assert.EqualValues(t, stat["hash_index_cells_total"], 276671)
-	assert.EqualValues(t, stat["hash_index_cells_used"], 0)
 	// Log
 	assert.EqualValues(t, stat["log_writes"], 40)
 	assert.EqualValues(t, stat["pending_log_writes"], 10)

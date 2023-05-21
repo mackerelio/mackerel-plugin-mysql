@@ -132,7 +132,6 @@ mysql.innodb_memory_allocation.total_mem_alloc	>=0
 mysql.innodb_semaphores.spin_waits	>=0
 mysql.innodb_semaphores.os_waits	>=0
 mysql.innodb_adaptive_hash_index.hash_index_cells_total	>=0
-mysql.innodb_adaptive_hash_index.hash_index_cells_used	>=0
 mysql.innodb_buffer_pool_efficiency.Innodb_buffer_pool_reads	>=0
 mysql.innodb_buffer_pool_efficiency.Innodb_buffer_pool_read_requests	>=0
 ~mysql.seconds_behind_master.Seconds_Behind_Master	>=0

@@ -1020,11 +1020,6 @@ func parseInnodbStatus(str string, p map[string]float64) {
 		}
 		if strings.HasPrefix(line, "Hash table size ") {
 			setMap(p, "hash_index_cells_total", record[3])
-			if strings.Contains(line, "used cells") {
-				setMap(p, "hash_index_cells_used", record[6])
-			} else {
-				p["hash_index_cells_used"] = 0
-			}
 			continue
 		}
 
