@@ -520,7 +520,6 @@ func (m *MySQLPlugin) addGraphdefWithInnoDBMetrics(graphdef map[string]mp.Graphs
 		Unit:  "integer",
 		Metrics: []mp.Metrics{
 			{Name: "hash_index_cells_total", Label: "Hash Index Cells Total", Diff: false, Stacked: false},
-			{Name: "hash_index_cells_used", Label: "Hash Index Cells Used", Diff: false, Stacked: false},
 		},
 	}
 	graphdef["innodb_buffer_pool_read"] = mp.Graphs{
