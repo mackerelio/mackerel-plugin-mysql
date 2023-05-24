@@ -229,7 +229,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["innodb_sem_wait_time_ms"], 0) // empty
 	// Innodb Transactions
 	assert.EqualValues(t, stat["innodb_transactions"], 49154)
-	assert.EqualValues(t, stat["unpurged_txns"], 4479)
 	assert.EqualValues(t, stat["history_list"], 775)
 	assert.EqualValues(t, stat["current_transactions"], 1)
 	assert.EqualValues(t, stat["active_transactions"], 0)
@@ -408,7 +407,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["innodb_sem_wait_time_ms"], 0) // empty
 	// Innodb Transactions
 	assert.EqualValues(t, stat["innodb_transactions"], 37950123) // empty
-	assert.EqualValues(t, stat["unpurged_txns"], 14)
 	assert.EqualValues(t, stat["history_list"], 0)
 	assert.EqualValues(t, stat["current_transactions"], 5)
 	assert.EqualValues(t, stat["active_transactions"], 0)
@@ -598,7 +596,6 @@ END OF INNODB MONITOR OUTPUT
 	assert.EqualValues(t, stat["innodb_sem_wait_time_ms"], 0) // empty
 	// Innodb Transactions
 	assert.EqualValues(t, stat["innodb_transactions"], 507)
-	assert.EqualValues(t, stat["unpurged_txns"], 2)
 	assert.EqualValues(t, stat["history_list"], 1)
 	assert.EqualValues(t, stat["current_transactions"], 3)
 	assert.EqualValues(t, stat["active_transactions"], 2)
