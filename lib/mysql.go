@@ -520,7 +520,6 @@ func (m *MySQLPlugin) addGraphdefWithInnoDBMetrics(graphdef map[string]mp.Graphs
 		Unit:  "integer",
 		Metrics: []mp.Metrics{
 			{Name: "hash_index_cells_total", Label: "Hash Index Cells Total", Diff: false, Stacked: false},
-			{Name: "hash_index_cells_used", Label: "Hash Index Cells Used", Diff: false, Stacked: false},
 		},
 	}
 	graphdef["innodb_buffer_pool_read"] = mp.Graphs{
@@ -1020,11 +1019,6 @@ func parseInnodbStatus(str string, p map[string]float64) {
 		}
 		if strings.HasPrefix(line, "Hash table size ") {
 			setMap(p, "hash_index_cells_total", record[3])
-			if strings.Contains(line, "used cells") {
-				setMap(p, "hash_index_cells_used", record[6])
-			} else {
-				p["hash_index_cells_used"] = 0
-			}
 			continue
 		}
 
