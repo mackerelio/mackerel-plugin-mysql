@@ -896,15 +896,6 @@ func parseInnodbStatus(str string, p map[string]float64) {
 			isTransaction = true
 			continue
 		}
-		if strings.HasPrefix(line, "Purge done for trx") {
-			if record[7] == "undo" {
-				record[7] = ""
-			}
-			val := makeBigint(record[6], record[7])
-			trx := p["innodb_transactions"] - float64(val)
-			increaseMap(p, "unpurged_txns", fmt.Sprintf("%.f", trx))
-			continue
-		}
 		if strings.HasPrefix(line, "History list length") {
 			increaseMap(p, "history_list", record[3])
 			continue
