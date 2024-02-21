@@ -6,7 +6,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/mackerelio/go-mackerel-plugin v0.1.4
 	github.com/stretchr/testify v1.8.1
-	golang.org/x/text v0.3.7
+	golang.org/x/text v0.3.8
 )
 
 require (
