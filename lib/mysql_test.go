@@ -12,8 +12,8 @@ func TestGraphDefinition_DisableInnoDB(t *testing.T) {
 
 	mysql.DisableInnoDB = true
 	graphdef := mysql.GraphDefinition()
-	if len(graphdef) != 8 {
-		t.Errorf("GetTempfilename: %d should be 7", len(graphdef))
+	if n := 8; len(graphdef) != n {
+		t.Errorf("GraphDefinition: %d should be %d", len(graphdef), n)
 	}
 }
 
@@ -21,8 +21,8 @@ func TestGraphDefinition(t *testing.T) {
 	var mysql MySQLPlugin
 
 	graphdef := mysql.GraphDefinition()
-	if len(graphdef) != 29 {
-		t.Errorf("GetTempfilename: %d should be 28", len(graphdef))
+	if n := 29; len(graphdef) != n {
+		t.Errorf("GraphDefinition: %d should be %d", len(graphdef), n)
 	}
 }
 
@@ -32,8 +32,8 @@ func TestGraphDefinition_DisableInnoDB_EnableExtended(t *testing.T) {
 	mysql.DisableInnoDB = true
 	mysql.EnableExtended = true
 	graphdef := mysql.GraphDefinition()
-	if len(graphdef) != 18 {
-		t.Errorf("GetTempfilename: %d should be 18", len(graphdef))
+	if n := 18; len(graphdef) != n {
+		t.Errorf("GraphDefinition: %d should be %d", len(graphdef), n)
 	}
 }
 
@@ -42,8 +42,8 @@ func TestGraphDefinition_EnableExtended(t *testing.T) {
 
 	mysql.EnableExtended = true
 	graphdef := mysql.GraphDefinition()
-	if len(graphdef) != 39 {
-		t.Errorf("GetTempfilename: %d should be 39", len(graphdef))
+	if n := 39; len(graphdef) != n {
+		t.Errorf("GraphDefinition: %d should be %d", len(graphdef), n)
 	}
 }
 
