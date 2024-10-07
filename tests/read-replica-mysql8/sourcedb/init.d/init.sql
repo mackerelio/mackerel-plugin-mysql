@@ -1,2 +1,2 @@
 CREATE USER 'replica'@'%' IDENTIFIED BY 'replica';
-GRANT REPLICATION ON *.* TO 'replica'@'%';
+GRANT REPLICATION SLAVE ON *.* TO 'replica'@'%';
