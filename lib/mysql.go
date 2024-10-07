@@ -298,10 +298,12 @@ func fetchShowVariablesBackwardCompatibile(stat map[string]float64) error {
 // This code does not work with multi-source replication.
 func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64, version [3]int) error {
 	command := "show replica status"
+	secondsBehindSourceColumn := "Seconds_Behind_Source"
 	if version[0] < 8 || (version[0] == 8 && version[1] == 0 && version[2] < 22) {
 		// From MySQL 8.0.22, SHOW RELICA STATUS command is created and SHOW SLAVE STATUS command is deprecated.
 		// cf.) https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-22.html
 		command = "show slave status"
+		secondsBehindSourceColumn = "Seconds_Behind_Master"
 	}
 	rows, err := db.Query(command)
 	if err != nil {
@@ -326,7 +328,7 @@ func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64
 		for i, column := range columns {
 			variableName := column.Name()
 			value := values[i]
-			if variableName == "Seconds_Behind_Master" {
+			if variableName == secondsBehindSourceColumn {
 				if value != nil {
 					f, err := atof(string(value))
 					if err != nil {
