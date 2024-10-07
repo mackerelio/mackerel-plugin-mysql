@@ -18,5 +18,6 @@ command = "/path/to/mackerel-plugin-mysql"
 
 ## Supported MySQL version
 
+- `v1.3.0 >=` mysql 5.7, 8.0, 8.4 and above
 - `v1.1.0 >=` mysql 5.7, 8.0
 - `v1.0.0` mysql 5.0, 5.1, 5.5, 5.6, 5.7, 8.0
