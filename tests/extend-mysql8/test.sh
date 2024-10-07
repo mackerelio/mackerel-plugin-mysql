@@ -25,7 +25,7 @@ docker run -d \
 	--name "test-$plugin" \
 	-p $port:3306 \
 	-e MYSQL_ROOT_PASSWORD=$password \
-	"$image" --default-authentication-plugin=mysql_native_password
+	"$image"
 trap 'docker stop test-$plugin; docker rm test-$plugin; exit' 1 2 3 15 EXIT
 sleep 10
 
