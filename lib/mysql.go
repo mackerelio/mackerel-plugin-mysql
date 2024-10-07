@@ -305,13 +305,13 @@ func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64
 	}
 	rows, err := db.Query(command)
 	if err != nil {
-		return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+		return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		columns, err := rows.ColumnTypes()
 		if err != nil {
-			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+			return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 		}
 
 		valuePtrs := make([]interface{}, len(columns))
@@ -321,7 +321,7 @@ func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64
 			valuePtrs[i] = &values[i]
 		}
 		if err = rows.Scan(valuePtrs...); err != nil {
-			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+			return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 		}
 		for i, column := range columns {
 			variableName := column.Name()
