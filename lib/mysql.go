@@ -296,16 +296,24 @@ func fetchShowVariablesBackwardCompatibile(stat map[string]float64) error {
 }
 
 // This code does not work with multi-source replication.
-func (m *MySQLPlugin) fetchShowSlaveStatus(db *sql.DB, stat map[string]float64) error {
-	rows, err := db.Query("show slave status")
+func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64, version [3]int) error {
+	command := "show replica status"
+	secondsBehindSourceColumn := "Seconds_Behind_Source"
+	if version[0] < 8 || (version[0] == 8 && version[1] == 0 && version[2] < 22) {
+		// From MySQL 8.0.22, SHOW RELICA STATUS command is created and SHOW SLAVE STATUS command is deprecated.
+		// cf.) https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-22.html
+		command = "show slave status"
+		secondsBehindSourceColumn = "Seconds_Behind_Master"
+	}
+	rows, err := db.Query(command)
 	if err != nil {
-		return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+		return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		columns, err := rows.ColumnTypes()
 		if err != nil {
-			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+			return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 		}
 
 		valuePtrs := make([]interface{}, len(columns))
@@ -315,12 +323,12 @@ func (m *MySQLPlugin) fetchShowSlaveStatus(db *sql.DB, stat map[string]float64) 
 			valuePtrs[i] = &values[i]
 		}
 		if err = rows.Scan(valuePtrs...); err != nil {
-			return fmt.Errorf("FetchMetrics (Slave Status): %w", err)
+			return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 		}
 		for i, column := range columns {
 			variableName := column.Name()
 			value := values[i]
-			if variableName == "Seconds_Behind_Master" {
+			if variableName == secondsBehindSourceColumn {
 				if value != nil {
 					f, err := atof(string(value))
 					if err != nil {
@@ -441,7 +449,7 @@ func (m *MySQLPlugin) FetchMetrics() (map[string]float64, error) {
 		}
 	}
 
-	err = m.fetchShowSlaveStatus(db, stat)
+	err = m.fetchShowReplicaStatus(db, stat, v)
 	if err != nil {
 		return nil, err
 	}
