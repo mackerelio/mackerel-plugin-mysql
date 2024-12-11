@@ -12,11 +12,11 @@ env:
   DEBIAN_FRONTEND: noninteractive
 jobs:
   lint:
-    uses: mackerelio/workflows/.github/workflows/go-lint.yml@v1.1.0
+    uses: mackerelio/workflows/.github/workflows/go-lint.yml@v1.2.0
   test:
-    uses: mackerelio/workflows/.github/workflows/go-test.yml@v1.1.0
+    uses: mackerelio/workflows/.github/workflows/go-test.yml@v1.2.0
   testci:
-    uses: mackerelio/workflows/.github/workflows/setup-go-matrix.yml@v1.1.0
+    uses: mackerelio/workflows/.github/workflows/setup-go-matrix.yml@v1.2.0
     with:
       os-versions: '["ubuntu-22.04"]'
       run: |
