@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/mackerelio/go-mackerel-plugin v0.1.4
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.10.0
 	golang.org/x/text v0.3.8
 )
 
