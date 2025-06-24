@@ -1,6 +1,8 @@
 package mpmysql
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"errors"
 	"flag"
@@ -160,6 +162,10 @@ type MySQLPlugin struct {
 	isUnixSocket   bool
 	EnableExtended bool
 	isAuroraReader bool
+
+	EnableTLS     bool
+	TLSRootCert   string
+	TLSSkipVerify bool
 }
 
 // MetricKeyPrefix returns the metrics key prefix
@@ -411,6 +417,25 @@ func (m *MySQLPlugin) FetchMetrics() (map[string]float64, error) {
 	config.Passwd = m.Password
 	config.Net = proto
 	config.Addr = m.Target
+
+	if m.EnableTLS {
+		var c tls.Config
+		if m.TLSRootCert != "" {
+			certPool := x509.NewCertPool()
+			pem, err := os.ReadFile(m.TLSRootCert)
+			if err != nil {
+				return nil, fmt.Errorf("cannot read %s: %v", m.TLSRootCert, err)
+			}
+			certPool.AppendCertsFromPEM(pem)
+			c.RootCAs = certPool
+		}
+		c.InsecureSkipVerify = m.TLSSkipVerify
+		err := mysql.RegisterTLSConfig("custom", &c)
+		if err != nil {
+			return nil, err
+		}
+		config.TLSConfig = "custom"
+	}
 
 	db, err := sql.Open("mysql", config.FormatDSN())
 	if err != nil {
@@ -1236,6 +1261,10 @@ func Do() {
 	optInnoDB := flag.Bool("disable_innodb", false, "Disable InnoDB metrics")
 	optMetricKeyPrefix := flag.String("metric-key-prefix", "mysql", "metric key prefix")
 	optEnableExtended := flag.Bool("enable_extended", false, "Enable Extended metrics")
+	optEnableTLS := flag.Bool("tls", false, "Enables TLS connection")
+	optTLSRootCert := flag.String("tls-root-cert", "", "The root certificate used for TLS certificate verification")
+	optTLSSkipVerify := flag.Bool("tls-skip-verify", false, "Disable TLS certificate verification")
+
 	flag.Bool("debug", false, "Print debugging logs to stderr(obsoleted)") // backward compatibility
 	flag.Parse()
 
@@ -1252,6 +1281,9 @@ func Do() {
 	mysql.DisableInnoDB = *optInnoDB
 	mysql.prefix = *optMetricKeyPrefix
 	mysql.EnableExtended = *optEnableExtended
+	mysql.EnableTLS = *optEnableTLS
+	mysql.TLSRootCert = *optTLSRootCert
+	mysql.TLSSkipVerify = *optTLSSkipVerify
 	helper := mp.NewMackerelPlugin(&mysql)
 	helper.Tempfile = *optTempfile
 	helper.Run()
