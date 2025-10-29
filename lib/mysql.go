@@ -52,7 +52,7 @@ func init() {
 }
 
 func (m *MySQLPlugin) defaultGraphdef() map[string]mp.Graphs {
-	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.Replace(m.MetricKeyPrefix(), "mysql", "MySQL", -1))
+	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.ReplaceAll(m.MetricKeyPrefix(), "mysql", "MySQL"))
 
 	capacityMetrics := []mp.Metrics{
 		{Name: "PercentageOfConnections", Label: "Percentage Of Connections", Diff: false, Stacked: false},
@@ -181,7 +181,7 @@ func (m *MySQLPlugin) fetchVersion(db *sql.DB) (version [3]int, err error) {
 	if err != nil {
 		return
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 	for rows.Next() {
 		var versionString string
 		if err = rows.Scan(trashScanner{}, &versionString); err != nil {
@@ -214,7 +214,7 @@ func (m *MySQLPlugin) fetchShowStatus(db *sql.DB, stat map[string]float64) error
 	if err != nil {
 		return fmt.Errorf("FetchMetrics (Status): %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 	for rows.Next() {
 		var (
 			variableName string
@@ -238,7 +238,7 @@ func (m *MySQLPlugin) fetchShowInnodbStatus(db *sql.DB, stat map[string]float64)
 		log.Println("FetchMetrics (InnoDB Status): ", err)
 		log.Fatalln("Hint: If you don't use InnoDB and see InnoDB Status error, you should set -disable_innodb")
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 
 	for rows.Next() {
 		var status string
@@ -256,7 +256,7 @@ func (m *MySQLPlugin) fetchShowVariables(db *sql.DB, stat map[string]float64) er
 	if err != nil {
 		return fmt.Errorf("FetchMetrics (Variables): %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 	rawStat := make(map[string]string)
 	for rows.Next() {
 		var (
@@ -315,7 +315,7 @@ func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64
 	if err != nil {
 		return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 	for rows.Next() {
 		columns, err := rows.ColumnTypes()
 		if err != nil {
@@ -353,7 +353,7 @@ func (m *MySQLPlugin) fetchProcesslist(db *sql.DB, stat map[string]float64) erro
 	if err != nil {
 		return fmt.Errorf("FetchMetrics (Processlist): %w", err)
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 
 	for k := range processState {
 		stat[k] = 0
@@ -441,7 +441,7 @@ func (m *MySQLPlugin) FetchMetrics() (map[string]float64, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
+	defer db.Close() // nolint
 
 	v, err := m.fetchVersion(db)
 	if err != nil {
@@ -523,7 +523,7 @@ func (m *MySQLPlugin) GraphDefinition() map[string]mp.Graphs {
 }
 
 func (m *MySQLPlugin) addGraphdefWithInnoDBMetrics(graphdef map[string]mp.Graphs) map[string]mp.Graphs {
-	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.Replace(m.MetricKeyPrefix(), "mysql", "MySQL", -1))
+	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.ReplaceAll(m.MetricKeyPrefix(), "mysql", "MySQL"))
 	graphdef["innodb_rows"] = mp.Graphs{
 		Label: labelPrefix + " innodb Rows",
 		Unit:  "float",
@@ -713,7 +713,7 @@ func (m *MySQLPlugin) addGraphdefWithInnoDBMetrics(graphdef map[string]mp.Graphs
 }
 
 func (m *MySQLPlugin) addExtendedGraphdef(graphdef map[string]mp.Graphs) map[string]mp.Graphs {
-	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.Replace(m.MetricKeyPrefix(), "mysql", "MySQL", -1))
+	labelPrefix := cases.Title(language.Und, cases.NoLower).String(strings.ReplaceAll(m.MetricKeyPrefix(), "mysql", "MySQL"))
 	graphdef["query_cache"] = mp.Graphs{
 		Label: labelPrefix + " query Cache",
 		Unit:  "float",
@@ -1184,7 +1184,7 @@ func parseProcesslist(state string, p map[string]float64) {
 	} else if strings.HasPrefix(state, "Waiting for ") && strings.HasSuffix(state, "lock") {
 		state = "Locked"
 	}
-	state = strings.Replace(strings.ToLower(state), " ", "_", -1)
+	state = strings.ReplaceAll(strings.ToLower(state), " ", "_")
 
 	state = strings.Join([]string{"State_", state}, "")
 	if _, found := processState[state]; !found {
@@ -1195,9 +1195,9 @@ func parseProcesslist(state string, p map[string]float64) {
 }
 
 func atof(str string) (float64, error) {
-	str = strings.Replace(str, ",", "", -1)
-	str = strings.Replace(str, ";", "", -1)
-	str = strings.Replace(str, "/s", "", -1)
+	str = strings.ReplaceAll(str, ",", "")
+	str = strings.ReplaceAll(str, ";", "")
+	str = strings.ReplaceAll(str, "/s", "")
 	str = strings.Trim(str, " ")
 	return strconv.ParseFloat(str, 64)
 }
