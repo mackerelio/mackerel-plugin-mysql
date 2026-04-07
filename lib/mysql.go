@@ -27,7 +27,7 @@ var (
 
 type trashScanner struct{}
 
-func (trashScanner) Scan(interface{}) error {
+func (trashScanner) Scan(any) error {
 	return nil
 }
 
@@ -322,7 +322,7 @@ func (m *MySQLPlugin) fetchShowReplicaStatus(db *sql.DB, stat map[string]float64
 			return fmt.Errorf("FetchMetrics (Replica Status): %w", err)
 		}
 
-		valuePtrs := make([]interface{}, len(columns))
+		valuePtrs := make([]any, len(columns))
 		values := make([]sql.RawBytes, len(columns))
 		for i := range values {
 			values[i] = sql.RawBytes{}
@@ -870,7 +870,7 @@ func parseInnodbStatus(str string, p map[string]float64) {
 	isTransaction := false
 	prevLine := ""
 
-	for _, line := range strings.Split(str, "\n") {
+	for line := range strings.SplitSeq(str, "\n") {
 		line = strings.TrimLeft(line, " ")
 		record := strings.Fields(line)
 
