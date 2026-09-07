@@ -3,7 +3,7 @@ module github.com/mackerelio/mackerel-plugin-mysql
 go 1.25.0
 
 require (
-	github.com/go-sql-driver/mysql v1.10.0
+	github.com/go-sql-driver/mysql v1.10.1
 	github.com/mackerelio/go-mackerel-plugin v0.1.6
 	github.com/stretchr/testify v1.12.1
 	golang.org/x/text v0.41.0
